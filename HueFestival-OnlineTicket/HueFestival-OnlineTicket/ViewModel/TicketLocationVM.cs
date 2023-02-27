@@ -18,13 +18,16 @@ namespace HueFestival_OnlineTicket.ViewModel
 
     public class TicketLocationVM_Input
     {
+        [Required]
         public string Name { get; set; }
 
+        [Required]
         public string Address { get; set; }
 
         [RegularExpression("0\\d{9}", ErrorMessage = "Invalid phone number")]
         public string PhoneNumber { get; set; }
 
+        [Required]
         public string Image { get; set; }
     }
 }

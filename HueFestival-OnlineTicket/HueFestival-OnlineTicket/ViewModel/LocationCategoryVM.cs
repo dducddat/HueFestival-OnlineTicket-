@@ -25,13 +25,8 @@ namespace HueFestival_OnlineTicket.ViewModel
     public class LocationCategoryVM_Details
     {
         public int Id { get; set; }
-
-        [Required]
         public string Title { get; set; }
-
-        [Required]
         public string Image { get; set; }
-
-        public List<LocationVM> ListLocationVM { get; set; }
+        public List<LocationVM> ListLocation { get; set; }
     }
 }

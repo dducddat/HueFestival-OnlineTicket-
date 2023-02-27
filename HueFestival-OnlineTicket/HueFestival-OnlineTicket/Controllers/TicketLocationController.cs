@@ -1,4 +1,5 @@
-﻿using HueFestival_OnlineTicket.Servies.Interface;
+﻿using HueFestival_OnlineTicket.Core.Interface;
+using HueFestival_OnlineTicket.Servies.Interface;
 using HueFestival_OnlineTicket.ViewModel;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,23 +9,24 @@ namespace HueFestival_OnlineTicket.Controllers
     [ApiController]
     public class TicketLocationController : ControllerBase
     {
-        private readonly ITickerLocationRepository _ticketLocationRepo;
+        private readonly ITicketLocationService ticketLocationService;
 
-        public TicketLocationController(ITickerLocationRepository tickerLocationRepo)
+        public TicketLocationController(ITicketLocationService _ticketLocationService)
         {
-            _ticketLocationRepo = tickerLocationRepo;
+            ticketLocationService = _ticketLocationService;
         }
 
         [HttpGet("GetAll")]
-        public async Task<IActionResult> GetAll() 
-        {
-            return Ok(await _ticketLocationRepo.GetAllAsync());
-        }
+        public async Task<IActionResult> GetAll()
+            => Ok(await ticketLocationService.GetAllAsync());
 
         [HttpPost("Add")]
         public async Task<IActionResult> Add(TicketLocationVM_Input ticketLocationVM_Input)
         {
-            await _ticketLocationRepo.AddAsync(ticketLocationVM_Input);
+            if (!ModelState.IsValid)
+                return UnprocessableEntity(ModelState);
+
+            await ticketLocationService.AddASync(ticketLocationVM_Input);
 
             return Ok("Successfully");
         }
@@ -32,34 +34,30 @@ namespace HueFestival_OnlineTicket.Controllers
         [HttpDelete("Delete")]
         public async Task<IActionResult> Delete(int id)
         {
-            var result = await _ticketLocationRepo.DeleteAsync(id);
+            if (await ticketLocationService.DeleteAsync(id))
+                return Ok("Delete Successfully");
 
-            if (result == 0)
-                return NotFound();
-
-            return Ok("Delete Successfully");
+            return NotFound();
         }
 
         [HttpGet("Edit")]
         public async Task<IActionResult> Edit(int id)
         {
-            var result = await _ticketLocationRepo.EditAsync(id);
+            var result = await ticketLocationService.GetByIdAsync(id);
 
-            if(result == null)
+            if (result is null)
                 return NotFound();
 
             return Ok(result);
         }
 
         [HttpPut("Edit")]
-        public async Task<IActionResult> Edit(int id, TicketLocationVM ticketLocationVM)
+        public async Task<IActionResult> Edit(TicketLocationVM ticketLocationVM)
         {
-            var result = await _ticketLocationRepo.EditAsync(id, ticketLocationVM);
-
-            if (result == 0)
-                return NotFound();
-
-            return Ok("Update Successfully");
+            if(await ticketLocationService.UpdateAsync(ticketLocationVM))
+                return Ok("Update Successfully");
+        
+            return BadRequest();
         }
     }
 }

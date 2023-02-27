@@ -1,4 +1,8 @@
-﻿using HueFestival_OnlineTicket.Servies.Interface;
+﻿using AutoMapper;
+using HueFestival_OnlineTicket.Core.Interface;
+using HueFestival_OnlineTicket.Data;
+using HueFestival_OnlineTicket.Model;
+using HueFestival_OnlineTicket.Servies.Interface;
 using HueFestival_OnlineTicket.ViewModel;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,78 +12,69 @@ namespace HueFestival_OnlineTicket.Controllers
     [ApiController]
     public class LocationCategoryController : ControllerBase
     {
-        private readonly ILocationCategoryRepository _locationCategoryRepo;
+        private readonly ILocationCategoryService locationCategoryService;
 
-        public LocationCategoryController(ILocationCategoryRepository locationCategoryRepo)
+        public LocationCategoryController(ILocationCategoryService _locationCategoryService)
         {
-            _locationCategoryRepo = locationCategoryRepo;
-        }
-
-        [HttpGet("GetAll")]
-        public async Task<IActionResult> GetAll() 
-        {
-            return Ok(await _locationCategoryRepo.GetAllAsync());
-        }
-
-        [HttpGet("GetById")]
-        public async Task<IActionResult> GetById(int id)
-        {
-            var result = await _locationCategoryRepo.GetByIdAsync(id);
-
-            if(result == null)
-                return NotFound();
-
-            return Ok(result);
-        }
-
-        [HttpGet("Edit")]
-        public async Task<IActionResult> Edit(int id)
-        {
-            var result = await _locationCategoryRepo.EditAsync(id);
-
-            if(result is null)
-                return NotFound();
-
-            return Ok(result);
-        }
-
-        [HttpPut("Edit")]
-        public async Task<IActionResult> Edit(int id, LocationCategoryVM locationCategoryVM)
-        {
-            if(id != locationCategoryVM.Id) 
-                return BadRequest("Invalid Input");
-
-            if (!ModelState.IsValid)
-                return UnprocessableEntity(ModelState);
-
-            var result = await _locationCategoryRepo.EditAsync(id, locationCategoryVM);
-
-            if (result == 0)
-                return NotFound();
-
-            return Ok("Update Successfully");
+            locationCategoryService = _locationCategoryService;
         }
 
         [HttpPost("Add")]
         public async Task<IActionResult> Add(LocationCategoryVM_Input locationCategoryVM_Input)
         {
-            if(!ModelState.IsValid) 
+            if (!ModelState.IsValid)
                 return UnprocessableEntity(ModelState);
 
-            await _locationCategoryRepo.AddAsync(locationCategoryVM_Input);
+            await locationCategoryService.AddAsync(locationCategoryVM_Input);
 
-            return Ok("Add Successfully");
+            return Ok("Successfully");
+        }
+
+        [HttpGet("Edit")]
+        public async Task<IActionResult> Edit(int id)
+        {
+            var result = await locationCategoryService.UpdateAsync(id);
+
+            if (result is null)
+                return NotFound();
+
+            return Ok(result);
+        }
+
+        [HttpPost("Edit")]
+        public async Task<IActionResult> Edit(LocationCategoryVM locationCategoryVM)
+        {
+            if (!ModelState.IsValid)
+                return UnprocessableEntity(ModelState);
+
+            if(await locationCategoryService.UpdateAsync(locationCategoryVM))
+                return Ok("Update Successfully");
+
+            return BadRequest();
         }
 
         [HttpDelete("Delete")]
-        public async Task<IActionResult> Delete(int id) 
+        public async Task<IActionResult> Delete(int id)
         {
-            var result = await _locationCategoryRepo.DeleteAsync(id);
+            if(await locationCategoryService.DeleteAsync(id))
+                return Ok("Delete Successfully");
 
-            if(result == 0)
+            return NotFound();
+        }
+
+        [HttpGet("Details")]
+        public async Task<IActionResult> Details(int id)
+        {
+            var result = await locationCategoryService.GetByIdAsync(id);
+
+            if (result is null)
                 return NotFound();
 
-            return Ok("Delete Successfully");
+            return Ok(result);
         }
+
+        [HttpGet("GetAll")]
+        public async Task<IActionResult> GetAll()
+            => Ok(await locationCategoryService.GetAllAsync());
     }
 }

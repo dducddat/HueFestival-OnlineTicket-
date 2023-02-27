@@ -1,3 +1,5 @@
+using HueFestival_OnlineTicket.Core.Interface;
+using HueFestival_OnlineTicket.Core.Service;
 using HueFestival_OnlineTicket.Data;
 using HueFestival_OnlineTicket.Servies.Interface;
 using HueFestival_OnlineTicket.Servies.Repository;
@@ -11,9 +13,11 @@ builder.Services.AddDbContext<HueFestivalContext>(options =>
 
 builder.Services.AddAutoMapper(typeof(Program));
 
-builder.Services.AddScoped<ILocationCategoryRepository, LocationCategoryRepository>();
-builder.Services.AddScoped<ILocationRepository, LocationRepository>();
-builder.Services.AddScoped<ITickerLocationRepository, TicketLoactionRepository>();
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+builder.Services.AddScoped<ILocationCategoryService, LocationCategoryService>();
+builder.Services.AddScoped<ITicketLocationService, TicketLocationService>();
+builder.Services.AddScoped<ILocationService, LocationService>();
+builder.Services.AddScoped<INewsService, NewsService>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

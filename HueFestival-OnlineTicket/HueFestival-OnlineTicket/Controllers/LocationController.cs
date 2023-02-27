@@ -1,7 +1,5 @@
-﻿using HueFestival_OnlineTicket.Model;
-using HueFestival_OnlineTicket.Servies.Interface;
+﻿using HueFestival_OnlineTicket.Core.Interface;
 using HueFestival_OnlineTicket.ViewModel;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HueFestival_OnlineTicket.Controllers
@@ -10,69 +8,68 @@ namespace HueFestival_OnlineTicket.Controllers
     [ApiController]
     public class LocationController : ControllerBase
     {
-        private readonly ILocationRepository _locationRepo;
+        private readonly ILocationService locationService;
 
-        public LocationController(ILocationRepository locationRepo)
+        public LocationController(ILocationService _locationService)
         {
-            _locationRepo = locationRepo;
+            locationService = _locationService;
         }
 
         [HttpPost("Add")]
-        public async Task<IActionResult> Add(LocationVM_Input locationVM_Input) 
+        public async Task<IActionResult> Add(LocationVM_Input locationVM_Input)
         {
             if (!ModelState.IsValid)
                 return UnprocessableEntity(ModelState);
 
-            await _locationRepo.AddAsync(locationVM_Input);
-
-            return Ok("Add Successfully");
+            if (await locationService.AddAsync(locationVM_Input))
+                return Ok("Add Successfully");
+            
+            return BadRequest();
         }
 
         [HttpGet("GetById")]
         public async Task<IActionResult> GetById(int id)
         {
-            var location = await _locationRepo.GetByIdAsync(id);
+            var result = await locationService.GetByIdAsync(id);
 
-            if (location is null)
+            if (result is null)
                 return NotFound();
 
-            return Ok(location);
+            return Ok(result);
         }
 
         [HttpGet("Edit")]
         public async Task<IActionResult> Edit(int id)
         {
-            var location = await _locationRepo.EditAsync(id);
+            var result = await locationService.UpdateAsync(id);
 
-            if (location is null)
+            if (result is null)
                 return NotFound();
 
-            return Ok(location);
+            return Ok(result);
         }
 
         [HttpDelete("Delete")]
-        public async Task<IActionResult> Delete(int id) 
+        public async Task<IActionResult> Delete(int id)
         {
-            var result = await _locationRepo.DeleteAsync(id);
+            var result = await locationService.DeleteAsync(id);
 
-            if (result == 0)
+            if (!result)
                 return NotFound();
 
             return Ok("Delete Successfully");
         }
 
         [HttpPut("Edit")]
-        public async Task<IActionResult> Edit(int id, LocationVM_Details locationVM_Details)
+        public async Task<IActionResult> Edit(LocationVM_Update locationVM_Update)
         {
-            if (id != locationVM_Details.Id)
-                return BadRequest("Invalid Input");
+            if (!ModelState.IsValid)
+                return UnprocessableEntity(ModelState);
 
-            var result = await _locationRepo.EditAsync(id, locationVM_Details);
+            if(await locationService.UpdateAsync(locationVM_Update))
+                return Ok("Edit Successfully");
 
-            if(result == 0) 
-                return NotFound();
-
-            return Ok("Edit Successfully");
+            return BadRequest();
         }
     }
 }
