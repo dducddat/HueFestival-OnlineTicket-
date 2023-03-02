@@ -14,7 +14,6 @@ namespace HueFestival_OnlineTicket.Helper
 
             CreateMap<Location, LocationVM>().ReverseMap();
             CreateMap<Location, LocationVM_Input>().ReverseMap();
-            CreateMap<Location, LocationVM_Update>().ReverseMap();
             CreateMap<Location, LocationVM_Details>()
                 .ForMember(des => des.LocationCategory, act => act.MapFrom(src => src.LocationCategory.Title));
 
@@ -24,7 +23,12 @@ namespace HueFestival_OnlineTicket.Helper
             CreateMap<News, NewsVM_Input>().ReverseMap();
             CreateMap<News, NewsVM>().ReverseMap();
             CreateMap<News, NewsVM_Details>().ReverseMap();
-            CreateMap<News, NewsVM_Update>().ReverseMap();
+
+            CreateMap<HelpMenu, HelpMenuVM>().ReverseMap();
+            CreateMap<HelpMenu, HelpMenuVM_Input>().ReverseMap();
+            CreateMap<HelpMenu, HelpMenuVM_Details>().ReverseMap();
+
+            CreateMap<ProgrammeImage, ProgrammeImageVM>().ReverseMap();
         }
     }
 }

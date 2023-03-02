@@ -1,4 +1,4 @@
-﻿using HueFestival_OnlineTicket.Core.Interface;
+﻿using HueFestival_OnlineTicket.Core.InterfaceService;
 using HueFestival_OnlineTicket.Servies.Interface;
 using HueFestival_OnlineTicket.ViewModel;
 using Microsoft.AspNetCore.Mvc;
@@ -40,21 +40,10 @@ namespace HueFestival_OnlineTicket.Controllers
             return NotFound();
         }
 
-        [HttpGet("Edit")]
-        public async Task<IActionResult> Edit(int id)
-        {
-            var result = await ticketLocationService.GetByIdAsync(id);
-
-            if (result is null)
-                return NotFound();
-
-            return Ok(result);
-        }
-
         [HttpPut("Edit")]
-        public async Task<IActionResult> Edit(TicketLocationVM ticketLocationVM)
+        public async Task<IActionResult> Edit(int id, TicketLocationVM_Input input)
         {
-            if(await ticketLocationService.UpdateAsync(ticketLocationVM))
+            if(await ticketLocationService.UpdateAsync(id, input))
                 return Ok("Update Successfully");
         
             return BadRequest();

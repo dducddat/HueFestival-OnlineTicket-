@@ -1,15 +1,12 @@
-﻿namespace HueFestival_OnlineTicket.Model
+﻿namespace HueFestival_OnlineTicket.ViewModel
 {
-    public class Program
+    public class ProgrammeVM_Input
     {
-        public int Id { get; set; }
         public string Name { get; set; }
         public string Content { get; set; }
         public int Type_Inoff { get; set; }
         public int Type_Program { get; set; }
         public double Price { get; set; }
-
-        public List<ProgramImage> ListProgramImage { get; set; }
-        public List<Show> ListShow { get; set; }
+        public List<ProgrammeImageVM> ListProgrammeImage { get; set; }
     }
 }

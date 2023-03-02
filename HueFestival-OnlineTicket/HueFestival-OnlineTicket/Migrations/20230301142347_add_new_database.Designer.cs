@@ -4,6 +4,7 @@ using HueFestival_OnlineTicket.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HueFestival_OnlineTicket.Migrations
 {
     [DbContext(typeof(HueFestivalContext))]
-    partial class HueFestivalContextModelSnapshot : ModelSnapshot
+    [Migration("20230301142347_add_new_database")]
+    partial class add_new_database
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using HueFestival_OnlineTicket.Core.Interface;
+using HueFestival_OnlineTicket.Core.InterfaceService;
 using HueFestival_OnlineTicket.Data;
 using HueFestival_OnlineTicket.Model;
 using HueFestival_OnlineTicket.ViewModel;
@@ -42,22 +42,20 @@ namespace HueFestival_OnlineTicket.Core.Service
         public async Task<LocationCategoryVM_Details> GetByIdAsync(int id)
             => mapper.Map<LocationCategoryVM_Details>(await unitOfWork.LocationCategoryRepo.GetByIdAsync(id));
 
-        public async Task<bool> UpdateAsync(LocationCategoryVM locationCategoryVM)
+        public async Task<bool> UpdateAsync(int id, LocationCategoryVM_Input input)
         {
-            try
-            {
-                unitOfWork.LocationCategoryRepo.Update(mapper.Map<LocationCategory>(locationCategoryVM));
-                await unitOfWork.CommitAsync();
+            var locationCategory = await unitOfWork.LocationCategoryRepo.GetByIdAsync(id);
 
-                return true;
-            }
-            catch
-            {
+            if (locationCategory is null) 
                 return false;
-            }
-        }
 
-        public async Task<LocationCategoryVM> UpdateAsync(int id)
-            => mapper.Map<LocationCategoryVM>(await unitOfWork.LocationCategoryRepo.GetByIdAsync(id));
+            locationCategory.Title = input.Title;
+            locationCategory.Image = input.Image;
+
+            unitOfWork.LocationCategoryRepo.Update(locationCategory);
+            await unitOfWork.CommitAsync();
+
+            return true;
+        }
     }
 }

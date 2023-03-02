@@ -1,4 +1,4 @@
-﻿using HueFestival_OnlineTicket.Core.Interface;
+﻿using HueFestival_OnlineTicket.Core.InterfaceService;
 using HueFestival_OnlineTicket.ViewModel;
 using Microsoft.AspNetCore.Mvc;
 
@@ -38,17 +38,6 @@ namespace HueFestival_OnlineTicket.Controllers
             return Ok(result);
         }
 
-        [HttpGet("Edit")]
-        public async Task<IActionResult> Edit(int id)
-        {
-            var result = await locationService.UpdateAsync(id);
-
-            if (result is null)
-                return NotFound();
-
-            return Ok(result);
-        }
-
         [HttpDelete("Delete")]
         public async Task<IActionResult> Delete(int id)
         {
@@ -61,12 +50,12 @@ namespace HueFestival_OnlineTicket.Controllers
         }
 
         [HttpPut("Edit")]
-        public async Task<IActionResult> Edit(LocationVM_Update locationVM_Update)
+        public async Task<IActionResult> Edit(int id, LocationVM_Input input)
         {
             if (!ModelState.IsValid)
                 return UnprocessableEntity(ModelState);
 
-            if(await locationService.UpdateAsync(locationVM_Update))
+            if(await locationService.UpdateAsync(id, input))
                 return Ok("Edit Successfully");
 
             return BadRequest();

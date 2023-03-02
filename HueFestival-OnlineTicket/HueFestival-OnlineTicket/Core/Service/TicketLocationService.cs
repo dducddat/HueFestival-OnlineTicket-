@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using HueFestival_OnlineTicket.Core.Interface;
+using HueFestival_OnlineTicket.Core.InterfaceService;
 using HueFestival_OnlineTicket.Data;
 using HueFestival_OnlineTicket.Model;
 using HueFestival_OnlineTicket.ViewModel;
@@ -39,22 +39,22 @@ namespace HueFestival_OnlineTicket.Core.Service
         public async Task<List<TicketLocationVM>> GetAllAsync()
             => mapper.Map<List<TicketLocationVM>>(await unitOfWork.TicketLocationRepo.GetAllAsync());
 
-        public async Task<TicketLocationVM> GetByIdAsync(int id)
-            => mapper.Map<TicketLocationVM>(await unitOfWork.TicketLocationRepo.GetByIdAsync(id));
-
-        public async Task<bool> UpdateAsync(TicketLocationVM ticketLocationVM)
+        public async Task<bool> UpdateAsync(int id, TicketLocationVM_Input input)
         {
-            try
-            {
-                unitOfWork.TicketLocationRepo.Update(mapper.Map<TicketLocation>(ticketLocationVM));
-                await unitOfWork.CommitAsync();
+            var ticketLocation = await unitOfWork.TicketLocationRepo.GetByIdAsync(id); 
 
-                return true;
-            }
-            catch
-            {
+            if(ticketLocation is null) 
                 return false;
-            }
+
+            ticketLocation.Name = input.Name;
+            ticketLocation.PhoneNumber = input.PhoneNumber;
+            ticketLocation.Address = input.Address;
+            ticketLocation.Image = input.Image;
+
+            unitOfWork.TicketLocationRepo.Update(ticketLocation);
+            await unitOfWork.CommitAsync();
+
+            return true;
         }
     }
 }

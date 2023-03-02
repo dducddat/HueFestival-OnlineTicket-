@@ -6,5 +6,6 @@ namespace HueFestival_OnlineTicket.Servies.Interface
 {
     public interface ILocationCaegoryRepository : IGenericRepository<LocationCategory>
     {
+        Task<bool> CheckExistAsync(int id);
     }
 }

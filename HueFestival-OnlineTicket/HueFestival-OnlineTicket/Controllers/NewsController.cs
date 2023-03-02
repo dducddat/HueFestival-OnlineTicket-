@@ -1,4 +1,4 @@
-﻿using HueFestival_OnlineTicket.Core.Interface;
+﻿using HueFestival_OnlineTicket.Core.InterfaceService;
 using HueFestival_OnlineTicket.ViewModel;
 using Microsoft.AspNetCore.Mvc;
 
@@ -51,24 +51,13 @@ namespace HueFestival_OnlineTicket.Controllers
             return Ok(result);
         }
 
-        [HttpGet("Edit")]
-        public async Task<IActionResult> Edit(int id)
-        {
-            var result = await newsService.UpdateAsync(id);
-
-            if (result is null)
-                return NotFound();
-
-            return Ok(result);
-        }
-
         [HttpPut("Edit")]
-        public async Task<IActionResult> Edit(NewsVM_Update input)
+        public async Task<IActionResult> Edit(int id, NewsVM_Input input)
         {
             if (!ModelState.IsValid)
                 return UnprocessableEntity(ModelState);
 
-            if (await newsService.UpdateAsync(input))
+            if (await newsService.UpdateAsync(id, input))
                 return Ok("Edit Successfully");
 
             return BadRequest();

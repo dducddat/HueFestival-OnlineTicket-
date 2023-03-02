@@ -33,31 +33,6 @@ namespace HueFestival_OnlineTicket.ViewModel
         public string Latitude { get; set; }
     }
 
-    public class LocationVM_Update
-    {
-        public int Id { get; set; }
-
-        [Required]
-        public int LocationCategoryId { get; set; }
-
-        [Required]
-        public string Title { get; set; }
-
-        [Required]
-        public string Summary { get; set; }
-
-        public string? Content { get; set; }
-
-        [Required]
-        public string Image { get; set; }
-
-        [Required]
-        public string Longtitude { get; set; }
-
-        [Required]
-        public string Latitude { get; set; }
-    }
-
     public class LocationVM_Details
     {
         public int Id { get; set; }

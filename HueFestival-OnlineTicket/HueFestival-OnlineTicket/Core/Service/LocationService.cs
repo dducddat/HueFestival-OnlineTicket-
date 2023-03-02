@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using HueFestival_OnlineTicket.Core.Interface;
+using HueFestival_OnlineTicket.Core.InterfaceService;
 using HueFestival_OnlineTicket.Data;
 using HueFestival_OnlineTicket.Model;
 using HueFestival_OnlineTicket.ViewModel;
@@ -19,17 +19,13 @@ namespace HueFestival_OnlineTicket.Core.Service
 
         public async Task<bool> AddAsync(LocationVM_Input locationVM_Input)
         {
-            try
-            {
-                await unitOfWork.LocationRepo.AddAsync(mapper.Map<Location>(locationVM_Input));
-                await unitOfWork.CommitAsync();
-
-                return true;
-            }
-            catch(Exception)
-            {
+            if(!await unitOfWork.LocationCategoryRepo.CheckExistAsync(locationVM_Input.LocationCategoryId))
                 return false;
-            }
+
+            await unitOfWork.LocationRepo.AddAsync(mapper.Map<Location>(locationVM_Input));
+            await unitOfWork.CommitAsync();
+
+            return true;
         }
 
         public async Task<bool> DeleteAsync(int id)
@@ -48,22 +44,28 @@ namespace HueFestival_OnlineTicket.Core.Service
         public async Task<LocationVM_Details> GetByIdAsync(int id)
             => mapper.Map<LocationVM_Details>(await unitOfWork.LocationRepo.GetByIdAsync(id));
 
-        public async Task<bool> UpdateAsync(LocationVM_Update locationVM_Update)
+        public async Task<bool> UpdateAsync(int id, LocationVM_Input input)
         {
-            try
-            {
-                unitOfWork.LocationRepo.Update(mapper.Map<Location>(locationVM_Update));
-                await unitOfWork.CommitAsync();
+            var location = await unitOfWork.LocationRepo.GetByIdAsync(id);
 
-                return true;
-            }
-            catch (Exception)
-            {
+            if (location is null)
                 return false;
-            }
-        }
 
-        public async Task<LocationVM_Update> UpdateAsync(int id)
-            => mapper.Map<LocationVM_Update>(await unitOfWork.LocationRepo.GetByIdAsync(id));
+            if (!await unitOfWork.LocationCategoryRepo.CheckExistAsync(input.LocationCategoryId))
+                return false;
+
+            location.LocationCategoryId = input.LocationCategoryId;
+            location.Title = input.Title;
+            location.Content = input.Content;
+            location.Summary = input.Summary;
+            location.Latitude = input.Latitude;
+            location.Longtitude = input.Longtitude;
+            location.Image = input.Image;
+
+            unitOfWork.LocationRepo.Update(location);
+            await unitOfWork.CommitAsync();
+
+            return true;
+        }
     }
 }

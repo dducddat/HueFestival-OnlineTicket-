@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using HueFestival_OnlineTicket.Core.Interface;
+using HueFestival_OnlineTicket.Core.InterfaceService;
 using HueFestival_OnlineTicket.Data;
 using HueFestival_OnlineTicket.Model;
 using HueFestival_OnlineTicket.Servies.Interface;
@@ -30,24 +30,13 @@ namespace HueFestival_OnlineTicket.Controllers
             return Ok("Successfully");
         }
 
-        [HttpGet("Edit")]
-        public async Task<IActionResult> Edit(int id)
-        {
-            var result = await locationCategoryService.UpdateAsync(id);
-
-            if (result is null)
-                return NotFound();
-
-            return Ok(result);
-        }
-
         [HttpPost("Edit")]
-        public async Task<IActionResult> Edit(LocationCategoryVM locationCategoryVM)
+        public async Task<IActionResult> Edit(int id, LocationCategoryVM_Input input)
         {
             if (!ModelState.IsValid)
                 return UnprocessableEntity(ModelState);
 
-            if(await locationCategoryService.UpdateAsync(locationCategoryVM))
+            if(await locationCategoryService.UpdateAsync(id, input))
                 return Ok("Update Successfully");
 
             return BadRequest();

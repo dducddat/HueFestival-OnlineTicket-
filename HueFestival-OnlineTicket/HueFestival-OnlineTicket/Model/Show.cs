@@ -12,7 +12,7 @@ namespace HueFestival_OnlineTicket.Model
         public int ShowCategoryId { get; set; }
 
         [ForeignKey("ProgramId")]
-        public Program Program { get; set; }
+        public Programme Programme { get; set; }
 
         [ForeignKey("LocationId")]
         public Location Location { get; set; }

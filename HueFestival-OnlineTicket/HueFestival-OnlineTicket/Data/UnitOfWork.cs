@@ -1,5 +1,6 @@
-﻿
-using AutoMapper;
+﻿using HueFestival_OnlineTicket.Core.Interface;
+using HueFestival_OnlineTicket.Core.InterfaceRepository;
+using HueFestival_OnlineTicket.Core.Repository;
 using HueFestival_OnlineTicket.Servies.Interface;
 using HueFestival_OnlineTicket.Servies.Repository;
 
@@ -12,15 +13,21 @@ namespace HueFestival_OnlineTicket.Data
         public ILocationRepository LocationRepo { get; private set; }
         public ITicketLocationRepository TicketLocationRepo { get; private set; }
         public INewsRepository NewsRepo { get; private set; }
+        public IHelpMenuRepository HelpMenuRepo { get; private set; }
+        public IProgrammeRepository ProgrammeRepo { get; private set; }
+        public IProgrammeImageRepository ProgrammeImageRepo { get; private set; }
 
         public UnitOfWork(HueFestivalContext _context)
-        {
-            context = _context;
-            LocationCategoryRepo = new LocationCategoryRepository(context);
-            LocationRepo = new LocationRepository(context);
-            TicketLocationRepo = new TicketLoactionRepository(context);
-            NewsRepo = new NewsRepository(context);
-        }
+            {
+                context = _context;
+                LocationCategoryRepo = new LocationCategoryRepository(context);
+                LocationRepo = new LocationRepository(context);
+                TicketLocationRepo = new TicketLoactionRepository(context);
+                NewsRepo = new NewsRepository(context);
+                HelpMenuRepo = new HelpMenuRepository(context);
+                ProgrammeRepo = new ProgrammeRepository(context);
+                ProgrammeImageRepo = new ProgrammeImageRepository(context);
+            }
 
         public void Commit() => context.SaveChanges();
 
