@@ -16,6 +16,9 @@ namespace HueFestival_OnlineTicket.Servies.Repository
         {
         }
 
+        public async Task<bool> CheckExistAsync(int id)
+            => await context.Locations.AnyAsync(x => x.Id == id);
+
         public override async Task<Location> GetByIdAsync(int id)
             => await context.Locations.Include(l => l.LocationCategory).SingleOrDefaultAsync(l => l.Id == id);
     }

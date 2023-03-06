@@ -28,7 +28,22 @@ namespace HueFestival_OnlineTicket.Helper
             CreateMap<HelpMenu, HelpMenuVM_Input>().ReverseMap();
             CreateMap<HelpMenu, HelpMenuVM_Details>().ReverseMap();
 
+            CreateMap<Programme, ProgrammeVM>().ReverseMap();
+            CreateMap<Programme, ProgrammeVM_Details>().ReverseMap();
+            CreateMap<Programme, ProgrammeVM_Input>().ReverseMap();
+
             CreateMap<ProgrammeImage, ProgrammeImageVM>().ReverseMap();
+
+            CreateMap<Show, ShowVM>()
+                .ForMember(des => des.ProgramName, act => act.MapFrom(src => src.Programme.Name))
+                .ForMember(des => des.LocationTitle, act => act.MapFrom(src => src.Location.Title))
+                .ForMember(des => des.Time, act => act.MapFrom(src => src.StartDate.ToString("HH:mm:ss")))
+                .ForMember(des => des.Type_Inoff, act => act.MapFrom(src => src.Programme.Type_Inoff));
+
+            CreateMap<Show, ShowVM_Input>().ReverseMap();
+
+            CreateMap<ShowCategory, ShowCategoryVM_Input>().ReverseMap();
+            CreateMap<ShowCategory, ShowCategoryVM>().ReverseMap();
         }
     }
 }

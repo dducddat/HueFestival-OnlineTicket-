@@ -1,5 +1,6 @@
 using HueFestival_OnlineTicket.Core.InterfaceService;
 using HueFestival_OnlineTicket.Core.Service;
+using HueFestival_OnlineTicket.Core.UnitOfWork;
 using HueFestival_OnlineTicket.Data;
 using Microsoft.EntityFrameworkCore;
 
@@ -18,6 +19,8 @@ builder.Services.AddScoped<ILocationService, LocationService>();
 builder.Services.AddScoped<INewsService, NewsService>();
 builder.Services.AddScoped<IHelpMenuService, HelpMenuService>();
 builder.Services.AddScoped<IProgrammeService, ProgrammeService>();
+builder.Services.AddScoped<IShowCategoryService, ShowCategoryService>();
+builder.Services.AddScoped<IShowService, ShowService>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

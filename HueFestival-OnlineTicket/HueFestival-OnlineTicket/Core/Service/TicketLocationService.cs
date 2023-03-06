@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using HueFestival_OnlineTicket.Core.InterfaceService;
-using HueFestival_OnlineTicket.Data;
+using HueFestival_OnlineTicket.Core.UnitOfWork;
 using HueFestival_OnlineTicket.Model;
 using HueFestival_OnlineTicket.ViewModel;
 
