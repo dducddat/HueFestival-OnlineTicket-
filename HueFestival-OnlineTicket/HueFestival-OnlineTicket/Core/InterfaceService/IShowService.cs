@@ -10,5 +10,9 @@ namespace HueFestival_OnlineTicket.Core.InterfaceService
         Task<int> UpdateAsync(int id, ShowVM_Input input);
         Task<IEnumerable<dynamic>> GetCalendarList();
         Task<List<ShowVM>> GetByDate(DateTime date);
+        Task<ShowVM_Details> GetDetailsAsync(int id);
+        Task<List<ShowVM>> GetAllAsync();
+        Task<bool> AddFavoriteAsync(int userId, int showId);
+        Task<bool> DeleteFavoriteAsync(Guid id);
     }
 }

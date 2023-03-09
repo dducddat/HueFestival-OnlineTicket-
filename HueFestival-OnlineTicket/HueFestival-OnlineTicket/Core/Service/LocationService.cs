@@ -28,6 +28,25 @@ namespace HueFestival_OnlineTicket.Core.Service
             return true;
         }
 
+        public async Task<bool> AddFavoriteAsync(int userId, int locationId)
+        {
+            try
+            {
+                await unitOfWork.LocationFavoriteRepo.AddAsync(new LocationFavorite { 
+                    Id = Guid.NewGuid(),
+                    UserId = userId,
+                    LocationId = locationId
+                });
+                await unitOfWork.CommitAsync();
+
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
         public async Task<bool> DeleteAsync(int id)
         {
             var location = await unitOfWork.LocationRepo.GetByIdAsync(id);
@@ -39,6 +58,26 @@ namespace HueFestival_OnlineTicket.Core.Service
             await unitOfWork.CommitAsync();
 
             return true;
+        }
+
+        public async Task<bool> DeleteFavoriteAsync(Guid id)
+        {
+            try
+            {
+                var locationFavorite = await unitOfWork.LocationFavoriteRepo.GetFavoriteAsync(id);
+
+                if (locationFavorite == null)
+                    return false;
+
+                unitOfWork.LocationFavoriteRepo.Delete(locationFavorite); 
+                await unitOfWork.CommitAsync();
+
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
         public async Task<LocationVM_Details> GetByIdAsync(int id)

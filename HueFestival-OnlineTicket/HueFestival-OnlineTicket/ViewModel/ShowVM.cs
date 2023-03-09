@@ -31,5 +31,8 @@ namespace HueFestival_OnlineTicket.ViewModel
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
         public string LocationTitle { get; set; }
+        public double Price { get; set; }
+        public string ShowCategoryName { get; set; }
+        public string ShowCategoryContent { get; set; }
     }
 }

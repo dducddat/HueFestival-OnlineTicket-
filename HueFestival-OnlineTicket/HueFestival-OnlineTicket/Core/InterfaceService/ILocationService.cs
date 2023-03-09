@@ -8,5 +8,7 @@ namespace HueFestival_OnlineTicket.Core.InterfaceService
         Task<bool> DeleteAsync(int id);
         Task<LocationVM_Details> GetByIdAsync(int id);
         Task<bool> UpdateAsync(int id, LocationVM_Input input);
+        Task<bool> AddFavoriteAsync(int userId, int locationId);
+        Task<bool> DeleteFavoriteAsync(Guid id);
     }
 }

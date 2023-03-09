@@ -27,6 +27,24 @@ namespace HueFestival_OnlineTicket.Controllers
             return BadRequest();
         }
 
+        [HttpPost("add_favorite")]
+        public async Task<IActionResult> AddFavorite(int locationId)
+        {
+            if (await locationService.AddFavoriteAsync(1, locationId)) 
+                return Ok("Successfully");
+
+            return BadRequest();
+        }
+
+        [HttpDelete("delete_favorite")]
+        public async Task<IActionResult> DeleteFavorite(Guid id)
+        {
+            if(await locationService.DeleteFavoriteAsync(id))
+                return Ok("Delete Successfully");
+
+            return Problem(title: "Wrong ID or error, please try again");
+        }
+
         [HttpGet("GetById")]
         public async Task<IActionResult> GetById(int id)
         {

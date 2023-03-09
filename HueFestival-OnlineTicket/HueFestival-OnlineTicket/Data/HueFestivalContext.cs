@@ -19,5 +19,8 @@ namespace HueFestival_OnlineTicket.Data
         public DbSet<ProgrammeImage> ProgramImages { get; set; }
         public DbSet<Show> Shows { get; set; }
         public DbSet<ShowCategory> ShowCategories { get; set; }
+        public DbSet<User> Users { get; set; }
+        public DbSet<ShowFavorite> ShowFavorites { get; set; }
+        public DbSet<LocationFavorite> LocationFavorites { get; set; }
     }
 }

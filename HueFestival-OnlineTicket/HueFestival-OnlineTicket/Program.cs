@@ -21,6 +21,7 @@ builder.Services.AddScoped<IHelpMenuService, HelpMenuService>();
 builder.Services.AddScoped<IProgrammeService, ProgrammeService>();
 builder.Services.AddScoped<IShowCategoryService, ShowCategoryService>();
 builder.Services.AddScoped<IShowService, ShowService>();
+builder.Services.AddScoped<IUserService, UserService>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

@@ -41,9 +41,24 @@ namespace HueFestival_OnlineTicket.Core.Service
             }
         }
 
-        public Task<int> DeleteAsync(int id)
+        public async Task<int> DeleteAsync(int id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var show = await unitOfWork.ShowRepo.GetByIdAsync(id);
+
+                if (show == null)
+                    return 1;
+
+                unitOfWork.ShowRepo.Delete(show);
+                await unitOfWork.CommitAsync();
+
+                return 3;
+            }
+            catch
+            { 
+                return 2; 
+            }
         }
 
         public async Task<IEnumerable<dynamic>> GetCalendarList()
@@ -52,9 +67,75 @@ namespace HueFestival_OnlineTicket.Core.Service
         public async Task<List<ShowVM>> GetByDate(DateTime date)
             => mapper.Map<List<ShowVM>>(await unitOfWork.ShowRepo.GetByDate(date));
 
-        public Task<int> UpdateAsync(int id, ShowVM_Input input)
+        public async Task<int> UpdateAsync(int id, ShowVM_Input input)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var show = await unitOfWork.ShowRepo.GetByIdAsync(id);
+
+                if (show == null)
+                    return 1;
+
+                show.ProgramId = input.ProgramId;
+                show.StartDate = input.StartDate;
+                show.EndDate = input.EndDate;
+                show.LocationId = input.LocationId;
+                show.ShowCategoryId = input.ShowCategoryId;
+
+                unitOfWork.ShowRepo.Update(show);
+                await unitOfWork.CommitAsync();
+
+                return 3;
+            }
+            catch
+            {
+                return 2;
+            }
+        }
+
+        public async Task<ShowVM_Details> GetDetailsAsync(int id)
+            => mapper.Map<ShowVM_Details>(await unitOfWork.ShowRepo.GetDetailsAsync(id));
+
+        public async Task<List<ShowVM>> GetAllAsync()
+            => mapper.Map<List<ShowVM>>(await unitOfWork.ShowRepo.GetAllAsync());
+
+        public async Task<bool> AddFavoriteAsync(int userId, int showId)
+        {
+            try
+            {
+                await unitOfWork.ShowFavoriteRepo.AddAsync(new ShowFavorite {
+                    Id = Guid.NewGuid(),
+                    UserId = userId,
+                    ShowId = showId
+                });
+                await unitOfWork.CommitAsync();
+
+                return true;
+            }
+            catch
+            {
+                return false; 
+            }
+        }
+
+        public async Task<bool> DeleteFavoriteAsync(Guid id)
+        {
+            try
+            {
+                var showFavorite = await unitOfWork.ShowFavoriteRepo.GetShowFavoriteAsync(id);
+
+                if (showFavorite == null)
+                    return false;
+
+                unitOfWork.ShowFavoriteRepo.Delete(showFavorite);
+                await unitOfWork.CommitAsync();
+
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
     }
 }
