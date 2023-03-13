@@ -10,6 +10,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<HueFestivalContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("HueFestival")));
 
+builder.Services.AddMemoryCache();
+
 builder.Services.AddAutoMapper(typeof(Program));
 
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();

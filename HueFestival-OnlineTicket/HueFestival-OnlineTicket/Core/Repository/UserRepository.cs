@@ -12,7 +12,7 @@ namespace HueFestival_OnlineTicket.Core.Repository
         {
         }
 
-        public async Task<User> GetByEmailAsync(string email)
-            => await context.Users.SingleOrDefaultAsync(x => x.Email == email);
+        public async Task<User> GetByPhoneAsync(string phone)
+            => await context.Users.SingleOrDefaultAsync(x => x.PhoneNumber == phone);
     }
 }

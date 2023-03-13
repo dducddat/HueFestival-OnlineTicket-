@@ -12,6 +12,9 @@ namespace HueFestival_OnlineTicket.Core.Repository
         {
         }
 
+        public async Task<List<LocationFavorite>> GetAllLocationFavoriteOfUserAsync(int userId)
+            => await context.LocationFavorites.Include(f => f.Location).Where(f => f.UserId == userId).ToListAsync();
+
         public async Task<LocationFavorite> GetFavoriteAsync(Guid id)
             => await context.LocationFavorites.SingleOrDefaultAsync(x => x.Id == id);
     }
