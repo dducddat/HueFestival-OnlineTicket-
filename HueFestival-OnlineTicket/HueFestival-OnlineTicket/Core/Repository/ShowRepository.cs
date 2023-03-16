@@ -29,5 +29,8 @@ namespace HueFestival_OnlineTicket.Core.Repository
         public async Task<Show> GetDetailsAsync(int id)
             => await context.Shows.Include(x => x.Location).Include(x => x.Programme).Include(x => x.ShowCategory)
                                   .Where(x => x.Id == id).SingleOrDefaultAsync();
+
+        public async Task<List<Show>> GetAllShowSalesTicketAsync()
+            => await context.Shows.Include(x => x.Programme).Where(x => x.Programme.Type_Inoff == 2).ToListAsync();
     }
 }

@@ -33,9 +33,6 @@ namespace HueFestival_OnlineTicket.Core.Service
             {
                 var user = mapper.Map<User>(input);
 
-                var passwordHash = BCrypt.Net.BCrypt.EnhancedHashPassword(input.Password, workFactor: 13);
-                user.Password = passwordHash;
-
                 await unitOfWork.UserRepo.AddAsync(user);
                 await unitOfWork.CommitAsync();
 
@@ -64,21 +61,6 @@ namespace HueFestival_OnlineTicket.Core.Service
             await unitOfWork.CommitAsync();
 
             return 3;
-        }
-
-        public bool CheckOTP(int otp)
-        {
-            if(!cache.TryGetValue(otp, out var result)) 
-            {
-                return false;
-            }
-
-            int cacheOTP = cache.Get<int>(otp);
-
-            if (cacheOTP != otp)
-                return false;
-
-            return true;
         }
 
         public async Task<bool> DeleteAsync(int id)
@@ -118,38 +100,8 @@ namespace HueFestival_OnlineTicket.Core.Service
             };
         }
 
-        public int GetOTP(string phoneNumber)
-        {
-            Random rd = new Random();
-
-            int otp = rd.Next(10000, 99999);
-
-            var cacheExprityOption = new MemoryCacheEntryOptions
-            {
-                AbsoluteExpiration = DateTime.Now.AddMinutes(1),
-                Priority = CacheItemPriority.High,
-                SlidingExpiration = TimeSpan.FromMinutes(1)
-            };
-
-            cache.Set<int>(otp, otp, cacheExprityOption);
-
-            return otp;
-        }
-
-        public async Task<string> LoginAsync(UserVM_Login input)
-        {
-            var user = await unitOfWork.UserRepo.GetByPhoneAsync(input.PhoneNumber);
-
-            if(user == null)
-                throw new Exception("Incorrect telephone number");
-
-            if (!BCrypt.Net.BCrypt.EnhancedVerify(input.Password, user.Password))
-                throw new Exception("Incorrect password");
-
-            var jwt = GenerateToken(user);
-
-            return jwt;
-        }
+        public async Task<User> GetByPhone(string phone)
+            => await unitOfWork.UserRepo.GetByPhoneAsync(phone);
 
         public async Task<bool> UpdateInfoAsync(UserVM_UpdateInfo input)
         {
@@ -185,34 +137,6 @@ namespace HueFestival_OnlineTicket.Core.Service
             }
 
             return false;
-        }
-
-        private string GenerateToken(User user)
-        {
-            var jwtTokenHandler = new JwtSecurityTokenHandler();
-
-            var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration.GetSection("SecretKey").Value));
-
-            var signinCredentials = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha512Signature);
-
-            var tokenDescription = new SecurityTokenDescriptor
-            {
-                Subject = new ClaimsIdentity(new[]
-                {
-                    new Claim("id", user.Id.ToString()),
-                    new Claim(ClaimTypes.Name, user.Name),
-                    new Claim(JwtRegisteredClaimNames.Email, user.Email),
-                    new Claim(ClaimTypes.Role, user.Role)
-                }),
-
-                Expires = DateTime.Now.AddHours(24),
-                SigningCredentials = signinCredentials
-            };
-
-            var token = jwtTokenHandler.CreateToken(tokenDescription);
-            var accessToken = jwtTokenHandler.WriteToken(token);
-
-            return accessToken;
         }
     }
 }

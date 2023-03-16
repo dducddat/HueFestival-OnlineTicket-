@@ -34,6 +34,7 @@ namespace HueFestival_OnlineTicket.Helper
 
             CreateMap<ProgrammeImage, ProgrammeImageVM>().ReverseMap();
 
+            CreateMap<Show, ShowVM_Input>().ReverseMap();
             CreateMap<Show, ShowVM>()
                 .ForMember(des => des.ProgramName, act => act.MapFrom(src => src.Programme.Name))
                 .ForMember(des => des.LocationTitle, act => act.MapFrom(src => src.Location.Title))
@@ -46,13 +47,29 @@ namespace HueFestival_OnlineTicket.Helper
                 .ForMember(des => des.Price, act => act.MapFrom(src => src.Programme.Price))
                 .ForMember(des => des.ShowCategoryName, act => act.MapFrom(src => src.ShowCategory.Name))
                 .ForMember(des => des.ShowCategoryContent, act => act.MapFrom(src => src.ShowCategory.Content));
-            CreateMap<Show, ShowVM_Input>().ReverseMap();
+            CreateMap<Show, ShowVM_SalesTicket>()
+                .ForMember(des => des.ShowId, act => act.MapFrom(src => src.Id))
+                .ForMember(des => des.ProgramName, act => act.MapFrom(src => src.Programme.Name));
 
             CreateMap<ShowCategory, ShowCategoryVM_Input>().ReverseMap();
             CreateMap<ShowCategory, ShowCategoryVM>().ReverseMap();
 
             CreateMap<User, UserVM_Input>().ReverseMap();
             CreateMap<User, UserVM>().ReverseMap();
+
+            CreateMap<Employee, EmployeeVM_Create>().ReverseMap();
+            CreateMap<Employee, EmployeeVM>().ReverseMap();
+            CreateMap<Employee, EmployeeVM_Update>().ReverseMap();
+
+            CreateMap<TicketType, TicketTypeVM_Input>().ReverseMap();
+            CreateMap<TicketType, TicketTypeVM>().ReverseMap();
+
+            CreateMap<Ticket, TicketVM>()
+                .ForMember(des => des.ShowName, act => act.MapFrom(src => src.TicketType.Show.Programme.Name))
+                .ForMember(des => des.Day, act => act.MapFrom(src => src.TicketType.Show.StartDate.ToShortDateString()))
+                .ForMember(des => des.Time, act => act.MapFrom(src => src.TicketType.Show.StartDate.ToShortTimeString()))
+                .ForMember(des => des.Type, act => act.MapFrom(src => src.TicketType.Type))
+                .ForMember(des => des.Price, act => act.MapFrom(src => src.TicketType.Price));
 
             CreateMap<LocationFavorite, LocationFavoriteVM>()
                 .ForMember(des => des.LocationTitle, act => act.MapFrom(src => src.Location.Title))

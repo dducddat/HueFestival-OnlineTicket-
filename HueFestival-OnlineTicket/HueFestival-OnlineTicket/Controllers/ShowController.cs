@@ -18,6 +18,10 @@ namespace HueFestival_OnlineTicket.Controllers
             showService = _showService;
         }
 
+        [HttpGet("get_show_sales_ticket")]
+        public async Task<IActionResult> GetShowSalesTicket()
+            => Ok(await showService.GetListShowSalesTicketAsync());
+
         [HttpPost("add_favorite")]
         public async Task<IActionResult> AddFavorite(int showId)
         {

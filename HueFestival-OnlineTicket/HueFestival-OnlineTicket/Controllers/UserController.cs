@@ -19,42 +19,13 @@ namespace HueFestival_OnlineTicket.Controllers
         [HttpPost("add")]
         public async Task<IActionResult> Add(UserVM_Input input)
         {
+            if (await userService.GetByPhone(input.PhoneNumber) != null)
+                return BadRequest("Số điện thoại đã tồn tại");
+
             if (await userService.AddAsync(input))
                 return Ok("Successfully");
 
             return Problem();
-        }
-
-        [HttpPost("login")]
-        public async Task<IActionResult> Login(UserVM_Login input)
-        {
-            try
-            {
-                var result = await userService.LoginAsync(input);
-
-                return Ok(new { Message = "Login successfully", JWT = result });
-            }
-            catch(Exception ex)
-            {
-                return BadRequest(new { Message = "Login faild", Error = ex.Message });
-            }
-        }
-
-        [HttpGet("get_otp")]
-        public async Task<IActionResult> GetOTP(string phoneNumber)
-        {
-            var otp = userService.GetOTP(phoneNumber);
-
-            return Ok(new { OTP = otp });
-        }
-
-        [HttpGet("check_otp")]
-        public async Task<IActionResult> CheckOTP(int otp)
-        {
-            if (userService.CheckOTP(otp))
-                return Ok();
-
-            return BadRequest();
         }
 
         [HttpDelete("delete_user")]

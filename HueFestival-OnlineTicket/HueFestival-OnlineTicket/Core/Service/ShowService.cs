@@ -17,6 +17,9 @@ namespace HueFestival_OnlineTicket.Core.Service
             mapper = _mapper;
         }
 
+        public async Task<List<ShowVM_SalesTicket>> GetListShowSalesTicketAsync()
+            => mapper.Map<List<ShowVM_SalesTicket>>(await unitOfWork.ShowRepo.GetAllShowSalesTicketAsync());
+
         public async Task<int> AddAsync(ShowVM_Input input)
         {
             try

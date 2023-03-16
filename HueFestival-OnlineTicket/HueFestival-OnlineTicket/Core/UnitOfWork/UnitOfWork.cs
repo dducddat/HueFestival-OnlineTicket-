@@ -22,6 +22,10 @@ namespace HueFestival_OnlineTicket.Core.UnitOfWork
         public ILocationFavoriteRepository LocationFavoriteRepo { get; private set; }
         public IShowFavoriteRepository ShowFavoriteRepo { get; private set; }
         public IUserRepository UserRepo { get; private set; }
+        public ITicketRepository TicketRepo { get; private set; }
+        public ITicketTypeRepository TicketTypeRepo { get; private set; }
+        public IEmployeeRepository EmployeeRepo { get; private set; }
+        public ICheckInRepository CheckInRepo { get; private set; }
 
         public UnitOfWork(HueFestivalContext _context)
         {
@@ -38,6 +42,10 @@ namespace HueFestival_OnlineTicket.Core.UnitOfWork
             LocationFavoriteRepo = new LocationFavoriteRepository(context);
             ShowFavoriteRepo = new ShowFavoriteRepository(context);
             UserRepo = new UserRepository(context);
+            TicketRepo = new TicketRepository(context);
+            TicketTypeRepo = new TicketTypeRepository(context);
+            EmployeeRepo = new EmployeeRepository(context);
+            CheckInRepo = new CheckInRepository(context);
         }
 
         public void Commit() => context.SaveChanges();

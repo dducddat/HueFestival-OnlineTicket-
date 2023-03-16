@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HueFestival_OnlineTicket.Migrations
 {
     [DbContext(typeof(HueFestivalContext))]
-    [Migration("20230305131445_delete_col_table_show")]
-    partial class delete_col_table_show
+    [Migration("20230313073936_create_new_database")]
+    partial class create_new_database
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -23,6 +23,62 @@ namespace HueFestival_OnlineTicket.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
+
+            modelBuilder.Entity("HueFestival_OnlineTicket.Model.CheckIn", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("DateCreated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("EmployeeId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("Status")
+                        .HasColumnType("bit");
+
+                    b.Property<Guid>("TicketId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EmployeeId");
+
+                    b.HasIndex("TicketId");
+
+                    b.ToTable("CheckIns");
+                });
+
+            modelBuilder.Entity("HueFestival_OnlineTicket.Model.Employee", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("Activate")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PhoneNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Role")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Employee");
+                });
 
             modelBuilder.Entity("HueFestival_OnlineTicket.Model.HelpMenu", b =>
                 {
@@ -105,6 +161,27 @@ namespace HueFestival_OnlineTicket.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("LocationsCategories");
+                });
+
+            modelBuilder.Entity("HueFestival_OnlineTicket.Model.LocationFavorite", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("LocationId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("LocationId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("LocationFavorites");
                 });
 
             modelBuilder.Entity("HueFestival_OnlineTicket.Model.News", b =>
@@ -242,6 +319,58 @@ namespace HueFestival_OnlineTicket.Migrations
                     b.ToTable("ShowCategories");
                 });
 
+            modelBuilder.Entity("HueFestival_OnlineTicket.Model.ShowFavorite", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("ShowId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ShowId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("ShowFavorites");
+                });
+
+            modelBuilder.Entity("HueFestival_OnlineTicket.Model.Ticket", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("Status")
+                        .HasColumnType("bit");
+
+                    b.Property<Guid>("TicketTypeId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TicketTypeId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Tickets");
+                });
+
             modelBuilder.Entity("HueFestival_OnlineTicket.Model.TicketLocation", b =>
                 {
                     b.Property<int>("Id")
@@ -271,6 +400,83 @@ namespace HueFestival_OnlineTicket.Migrations
                     b.ToTable("TicketLocations");
                 });
 
+            modelBuilder.Entity("HueFestival_OnlineTicket.Model.TicketType", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<double>("Price")
+                        .HasColumnType("float");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ShowId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ShowId");
+
+                    b.ToTable("TicketTypes");
+                });
+
+            modelBuilder.Entity("HueFestival_OnlineTicket.Model.User", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PhoneNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Role")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("HueFestival_OnlineTicket.Model.CheckIn", b =>
+                {
+                    b.HasOne("HueFestival_OnlineTicket.Model.Employee", "Employee")
+                        .WithMany("CheckIns")
+                        .HasForeignKey("EmployeeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("HueFestival_OnlineTicket.Model.Ticket", "Ticket")
+                        .WithMany()
+                        .HasForeignKey("TicketId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Employee");
+
+                    b.Navigation("Ticket");
+                });
+
             modelBuilder.Entity("HueFestival_OnlineTicket.Model.Location", b =>
                 {
                     b.HasOne("HueFestival_OnlineTicket.Model.LocationCategory", "LocationCategory")
@@ -280,6 +486,25 @@ namespace HueFestival_OnlineTicket.Migrations
                         .IsRequired();
 
                     b.Navigation("LocationCategory");
+                });
+
+            modelBuilder.Entity("HueFestival_OnlineTicket.Model.LocationFavorite", b =>
+                {
+                    b.HasOne("HueFestival_OnlineTicket.Model.Location", "Location")
+                        .WithMany()
+                        .HasForeignKey("LocationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("HueFestival_OnlineTicket.Model.User", "User")
+                        .WithMany("LocationFavorites")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Location");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("HueFestival_OnlineTicket.Model.ProgrammeImage", b =>
@@ -320,6 +545,60 @@ namespace HueFestival_OnlineTicket.Migrations
                     b.Navigation("ShowCategory");
                 });
 
+            modelBuilder.Entity("HueFestival_OnlineTicket.Model.ShowFavorite", b =>
+                {
+                    b.HasOne("HueFestival_OnlineTicket.Model.Show", "Show")
+                        .WithMany()
+                        .HasForeignKey("ShowId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("HueFestival_OnlineTicket.Model.User", "User")
+                        .WithMany("ShowFavorites")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Show");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("HueFestival_OnlineTicket.Model.Ticket", b =>
+                {
+                    b.HasOne("HueFestival_OnlineTicket.Model.TicketType", "TicketType")
+                        .WithMany()
+                        .HasForeignKey("TicketTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("HueFestival_OnlineTicket.Model.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("TicketType");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("HueFestival_OnlineTicket.Model.TicketType", b =>
+                {
+                    b.HasOne("HueFestival_OnlineTicket.Model.Show", "Show")
+                        .WithMany()
+                        .HasForeignKey("ShowId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Show");
+                });
+
+            modelBuilder.Entity("HueFestival_OnlineTicket.Model.Employee", b =>
+                {
+                    b.Navigation("CheckIns");
+                });
+
             modelBuilder.Entity("HueFestival_OnlineTicket.Model.Location", b =>
                 {
                     b.Navigation("ListShow");
@@ -340,6 +619,13 @@ namespace HueFestival_OnlineTicket.Migrations
             modelBuilder.Entity("HueFestival_OnlineTicket.Model.ShowCategory", b =>
                 {
                     b.Navigation("ListShow");
+                });
+
+            modelBuilder.Entity("HueFestival_OnlineTicket.Model.User", b =>
+                {
+                    b.Navigation("LocationFavorites");
+
+                    b.Navigation("ShowFavorites");
                 });
 #pragma warning restore 612, 618
         }

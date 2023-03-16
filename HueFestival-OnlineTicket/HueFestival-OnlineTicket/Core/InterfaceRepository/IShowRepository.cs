@@ -8,5 +8,6 @@ namespace HueFestival_OnlineTicket.Core.InterfaceRepository
         Task<List<Show>> GetByDate(DateTime date);
         Task<IEnumerable<dynamic>> GetCalendarList();
         Task<Show> GetDetailsAsync(int id);
+        Task<List<Show>> GetAllShowSalesTicketAsync();
     }
 }

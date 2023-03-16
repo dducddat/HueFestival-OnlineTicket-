@@ -19,6 +19,10 @@ namespace HueFestival_OnlineTicket.Core.UnitOfWork
         ILocationFavoriteRepository LocationFavoriteRepo { get; }
         IShowFavoriteRepository ShowFavoriteRepo { get; }
         IUserRepository UserRepo { get; }
+        ITicketRepository TicketRepo { get; }
+        ITicketTypeRepository TicketTypeRepo { get; }
+        IEmployeeRepository EmployeeRepo { get; }
+        ICheckInRepository CheckInRepo { get; }
 
         void Commit();
         void RollBack();

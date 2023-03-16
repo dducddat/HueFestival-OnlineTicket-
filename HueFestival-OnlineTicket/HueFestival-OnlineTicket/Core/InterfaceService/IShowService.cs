@@ -14,5 +14,6 @@ namespace HueFestival_OnlineTicket.Core.InterfaceService
         Task<List<ShowVM>> GetAllAsync();
         Task<bool> AddFavoriteAsync(int userId, int showId);
         Task<bool> DeleteFavoriteAsync(Guid id);
+        Task<List<ShowVM_SalesTicket>> GetListShowSalesTicketAsync();
     }
 }

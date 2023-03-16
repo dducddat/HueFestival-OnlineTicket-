@@ -35,4 +35,11 @@ namespace HueFestival_OnlineTicket.ViewModel
         public string ShowCategoryName { get; set; }
         public string ShowCategoryContent { get; set; }
     }
+
+    public class ShowVM_SalesTicket
+    {
+        public int ShowId { get; set; }
+        public string ProgramName { get; set; }
+        public DateTime StartDate { get; set; }
+    }
 }

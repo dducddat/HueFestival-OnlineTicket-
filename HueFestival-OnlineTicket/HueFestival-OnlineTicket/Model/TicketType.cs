@@ -1,7 +1,10 @@
-﻿namespace HueFestival_OnlineTicket.Model
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace HueFestival_OnlineTicket.Model
 {
     public class TicketType
     {
+        [Key]
         public Guid Id { get; set; }
         public int ShowId { get; set; }
         public Show Show { get; set; }
