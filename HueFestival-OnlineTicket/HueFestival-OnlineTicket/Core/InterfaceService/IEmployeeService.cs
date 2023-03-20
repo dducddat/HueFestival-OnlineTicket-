@@ -1,4 +1,5 @@
 ﻿using HueFestival_OnlineTicket.Model;
+using HueFestival_OnlineTicket.ViewModel;
 
 namespace HueFestival_OnlineTicket.Core.InterfaceService
 {
@@ -11,6 +12,7 @@ namespace HueFestival_OnlineTicket.Core.InterfaceService
         Task UpdateAsync(Employee employee);
         Task<Employee> GetByPhoneAsync(string phone);
         Task<Employee> LoginAsync(string username, string password);
+        Task<bool> ChangePasswordAsync(Guid employeeId, EmployeeVM_ChangePassword password);
         Task<bool> ActivateAsync(string phone);
     }
 }

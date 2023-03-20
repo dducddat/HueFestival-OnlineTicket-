@@ -8,5 +8,6 @@ namespace HueFestival_OnlineTicket.Core.InterfaceService
         Task<int> BuyTicketAsync(TicketVM_Buy ticket, int userId);
         Task<List<Ticket>> GetAllAsync();
         Task<List<Ticket>> GetByUserId(int userId);
+        Task<Ticket> GetByIdAsync(Guid ticketId);
     }
 }

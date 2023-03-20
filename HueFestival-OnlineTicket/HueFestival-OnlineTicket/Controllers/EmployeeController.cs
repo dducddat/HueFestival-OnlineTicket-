@@ -2,8 +2,10 @@
 using HueFestival_OnlineTicket.Core.InterfaceService;
 using HueFestival_OnlineTicket.Model;
 using HueFestival_OnlineTicket.ViewModel;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace HueFestival_OnlineTicket.Controllers
 {
@@ -77,6 +79,21 @@ namespace HueFestival_OnlineTicket.Controllers
             {
                 return Problem(detail: ex.Message);
             }
+        }
+
+        [Authorize]
+        [HttpPut("change_password")]
+        public async Task<IActionResult> ChangePassword(EmployeeVM_ChangePassword password)
+        {
+            if (password.NewPassword != password.ConfirmNewPasswrod)
+                return BadRequest("Other new password confirm new password");
+
+            string userId = User.FindFirstValue("id");
+
+            if(!await employeeService.ChangePasswordAsync(Guid.Parse(userId), password))
+                return BadRequest("Wrong password");
+
+            return Ok("Successfully");
         }
     }
 }

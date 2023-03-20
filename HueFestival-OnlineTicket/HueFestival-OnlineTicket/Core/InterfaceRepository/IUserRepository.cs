@@ -6,5 +6,6 @@ namespace HueFestival_OnlineTicket.Core.InterfaceRepository
     public interface IUserRepository : IGenericRepository<User>
     {
         Task<User> GetByPhoneAsync(string phone);
+        Task<User> GetByIdAndPasswordAsync(int id, string password);
     }
 }

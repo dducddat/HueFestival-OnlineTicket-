@@ -41,5 +41,62 @@ namespace HueFestival_OnlineTicket.Core.Service
 
             return new { Message = "Vé hợp lệ", Data = mapper.Map<TicketVM>(ticket), Success = true };
         }
+
+        public async Task<List<CheckIn>> GetHistoryCheckIn(Guid employeeId, DateTime? dateCheckIn, string? typeTicket, int? programmeId)
+        {
+            var listCheckIn = await unitOfWork.CheckInRepo.GetHistoryCheckInAsync(employeeId);
+
+            bool date = dateCheckIn == null ? false : true;
+            bool type = typeTicket == null || typeTicket == null ? false : true;
+            bool programId = programmeId == null ? false : true;
+
+            if (!date && !type && !programId)
+            {
+                return listCheckIn;
+            }    
+
+            if (date && !type && !programId)
+            {
+                return listCheckIn.Where(x => x.DateCreated.Date == dateCheckIn).ToList();
+            }    
+
+            if (!date && type && !programId)
+            {
+                return listCheckIn.Where(x => x.Ticket.TicketType.Type == typeTicket)
+                                  .ToList();
+            }    
+
+            if (!date && !type && programId)
+            {
+                return listCheckIn.Where(x => x.Ticket.TicketType.Show.Programme.Id == programmeId)
+                                  .ToList();
+            }    
+
+            if (!date && type && programId)
+            {
+                return listCheckIn.Where(x => x.Ticket.TicketType.Show.Programme.Id == programmeId && x.Ticket.TicketType.Type == typeTicket)
+                                  .ToList();
+            }    
+
+            if (date && !type && programId)
+            {
+                return listCheckIn.Where(x => x.Ticket.TicketType.Show.Programme.Id == programmeId && x.DateCreated.Date == dateCheckIn)
+                                  .ToList();
+            }    
+
+            if (date && type && !programId)
+            {
+                return listCheckIn.Where(x => x.Ticket.TicketType.Type == typeTicket && x.DateCreated.Date == dateCheckIn)
+                                  .ToList();
+            }
+
+            return listCheckIn.Where(x => x.Ticket.TicketType.Show.Programme.Id == programmeId &&
+                                          x.DateCreated.Date == dateCheckIn &&
+                                          x.Ticket.TicketType.Type == typeTicket)
+                              .ToList();
+        }
+
+        public async Task<List<CheckInVM_Report>> ReportAsync(Guid employeeId)
+            => await unitOfWork.CheckInRepo.ReprotAsync(employeeId);
     }
 }

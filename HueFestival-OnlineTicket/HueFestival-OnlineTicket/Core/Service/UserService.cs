@@ -44,23 +44,19 @@ namespace HueFestival_OnlineTicket.Core.Service
             }
         }
 
-        public async Task<int> ChangePassword(int id, UserVM_ChangePassword input)
+        public async Task<bool> ChangePassword(int id, UserVM_ChangePassword input)
         {
-            var user = await unitOfWork.UserRepo.GetByIdAsync(id);
+            var user = await unitOfWork.UserRepo.GetByIdAndPasswordAsync(id, input.OldPassword);
 
             if (user == null)
-                return 1;
+                return false;
 
-            if (!BCrypt.Net.BCrypt.EnhancedVerify(input.OldPassword, user.Password))
-                return 2;
-
-            var passwordHash = BCrypt.Net.BCrypt.EnhancedHashPassword(input.NewPassword, workFactor: 13);
-            user.Password = passwordHash;
+            user.Password = input.NewPassword;
 
             unitOfWork.UserRepo.Update(user);
             await unitOfWork.CommitAsync();
 
-            return 3;
+            return true;
         }
 
         public async Task<bool> DeleteAsync(int id)

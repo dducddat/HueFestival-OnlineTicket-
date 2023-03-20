@@ -1,6 +1,8 @@
 ﻿using HueFestival_OnlineTicket.Core.InterfaceService;
 using HueFestival_OnlineTicket.ViewModel;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace HueFestival_OnlineTicket.Controllers
 {
@@ -27,10 +29,13 @@ namespace HueFestival_OnlineTicket.Controllers
             return BadRequest();
         }
 
+        [Authorize]
         [HttpPost("add_favorite")]
         public async Task<IActionResult> AddFavorite(int locationId)
         {
-            if (await locationService.AddFavoriteAsync(1, locationId)) 
+            string userId = User.FindFirstValue("id");
+
+            if (await locationService.AddFavoriteAsync(Int32.Parse(userId), locationId)) 
                 return Ok("Successfully");
 
             return BadRequest();

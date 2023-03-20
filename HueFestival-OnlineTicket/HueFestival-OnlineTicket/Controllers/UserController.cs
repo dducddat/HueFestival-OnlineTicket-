@@ -1,7 +1,9 @@
 ﻿using HueFestival_OnlineTicket.Core.InterfaceService;
 using HueFestival_OnlineTicket.ViewModel;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace HueFestival_OnlineTicket.Controllers
 {
@@ -37,31 +39,28 @@ namespace HueFestival_OnlineTicket.Controllers
             return Problem("User not found or error, please try again");
         }
 
+        [Authorize]
         [HttpPut("change_password")]
         public async Task<IActionResult> ChangePassword(UserVM_ChangePassword input)
         {
             if (input.NewPassword != input.ConfirmNewPassword)
                 return BadRequest("Other new password confirm new password");
 
-            var result = await userService.ChangePassword(1, input);
+            string userId = User.FindFirstValue("id");
 
-            switch(result)
-            {
-                case 1:
-                    return NotFound();
-                case 2:
-                    return BadRequest("Old password is incorrect");
-                case 3:
-                    return Ok("Successfully");
-                default:
-                    return NoContent();
-            }    
+            if (!await userService.ChangePassword(Int32.Parse(userId), input))
+                return BadRequest("Wrong password");
+
+            return Ok("Successfully");
         }
 
+        [Authorize]
         [HttpGet("location_and_show_favorite")]
-        public async Task<IActionResult> GetAllShowAndLocationFavorive(int userId)
+        public async Task<IActionResult> GetAllShowAndLocationFavorive()
         {
-            return Ok(await userService.GetAllShowAndLocationFavoriveAsync(userId));
+            string userId = User.FindFirstValue("id");
+
+            return Ok(await userService.GetAllShowAndLocationFavoriveAsync(Int32.Parse(userId)));
         }
 
         [HttpPut("update_role")]

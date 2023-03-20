@@ -34,4 +34,11 @@
         public string PhoneNumber { get; set; }
         public int OTP { get; set; }
     }
+
+    public class EmployeeVM_ChangePassword
+    {
+        public string OldPasswod { get; set; }
+        public string NewPassword { get; set; }
+        public string ConfirmNewPasswrod { get; set; }
+    }
 }

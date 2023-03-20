@@ -4,6 +4,7 @@ using HueFestival_OnlineTicket.ViewModel;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using QRCoder;
 using System.Security.Claims;
 
 namespace HueFestival_OnlineTicket.Controllers
@@ -21,7 +22,7 @@ namespace HueFestival_OnlineTicket.Controllers
             mapper = _mapper;
         }
 
-        [Authorize]
+        [Authorize(Roles = "customer")]
         [HttpPost("buy_ticket")]
         public async Task<IActionResult> BuyTicket(TicketVM_Buy ticket)
         {
@@ -48,13 +49,29 @@ namespace HueFestival_OnlineTicket.Controllers
         public async Task<IActionResult> GetAll()
             => Ok(mapper.Map<List<TicketVM>>(await ticketService.GetAllAsync()));
 
-        [Authorize]
+        [Authorize(Roles = "customer")]
         [HttpGet("get_list_purchased_tickets")]
         public async Task<IActionResult> GetByUserId()
         {
             string userId = User.FindFirstValue("id");
 
             return Ok(mapper.Map<List<TicketVM>>(await ticketService.GetByUserId(Int32.Parse(userId))));
+        }
+
+        [HttpGet("get_qrcode_ticket")]
+        public async Task<IActionResult> GetQRCodeTicket(Guid ticketId)
+        {
+            var ticket = await ticketService.GetByIdAsync(ticketId);
+
+            if (ticket is null)
+                return NotFound();
+
+            QRCodeGenerator qrGenerator = new QRCodeGenerator();
+            QRCodeData qrCodeData = qrGenerator.CreateQrCode(ticket.Code, QRCodeGenerator.ECCLevel.Q);
+            BitmapByteQRCode qrCode = new BitmapByteQRCode(qrCodeData);
+            byte[] qrCodeAsBitmapByteArr = qrCode.GetGraphic(10);
+
+            return File(qrCodeAsBitmapByteArr, "image/jpeg");
         }
     }
 }

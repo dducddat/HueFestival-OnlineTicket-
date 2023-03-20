@@ -7,5 +7,7 @@ namespace HueFestival_OnlineTicket.Core.InterfaceRepository
     {
         Task<List<Ticket>> GetByUserIdAsync(int userId);
         Task<Ticket> GetByCode(string code);
+        bool CheckCodeAsync(string code);
+        Task<Ticket> GetById(Guid id);
     }
 }

@@ -1,6 +1,7 @@
 ﻿using HueFestival_OnlineTicket.Core.InterfaceService;
 using HueFestival_OnlineTicket.Core.UnitOfWork;
 using HueFestival_OnlineTicket.Model;
+using HueFestival_OnlineTicket.ViewModel;
 
 namespace HueFestival_OnlineTicket.Core.Service
 {
@@ -35,6 +36,21 @@ namespace HueFestival_OnlineTicket.Core.Service
 
             await unitOfWork.EmployeeRepo.AddAsync(employee);
             await unitOfWork.CommitAsync();
+        }
+
+        public async Task<bool> ChangePasswordAsync(Guid employeeId, EmployeeVM_ChangePassword password)
+        {
+            var employee = await unitOfWork.EmployeeRepo.ChangePasswordAsync(employeeId, password.OldPasswod);
+
+            if (employee == null)
+                return false;
+
+            employee.Password = password.NewPassword;
+
+            unitOfWork.EmployeeRepo.Update(employee);
+            await unitOfWork.CommitAsync();
+
+            return true;
         }
 
         public async Task DeleteAsync(Employee employee)

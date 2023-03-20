@@ -2,6 +2,7 @@
 using HueFestival_OnlineTicket.Core.UnitOfWork;
 using HueFestival_OnlineTicket.Model;
 using HueFestival_OnlineTicket.ViewModel;
+using QRCoder;
 
 namespace HueFestival_OnlineTicket.Core.Service
 {
@@ -42,7 +43,7 @@ namespace HueFestival_OnlineTicket.Core.Service
                         UserId = userId,
                         CreatedDate = createdDate,
                         Status = false,
-                        Code = Guid.NewGuid().ToString().Replace("-", string.Empty)
+                        Code = GenerateCode()
                     });
                 }
                 await unitOfWork.CommitAsync();
@@ -56,10 +57,45 @@ namespace HueFestival_OnlineTicket.Core.Service
             }
         }
 
+        private byte[] GenerateQRCode(string code)
+        {
+            QRCodeGenerator qrGenerator = new QRCodeGenerator();
+            QRCodeData qrCodeData = qrGenerator.CreateQrCode(code, QRCodeGenerator.ECCLevel.Q);
+            BitmapByteQRCode qrCode = new BitmapByteQRCode(qrCodeData);
+            byte[] qrCodeAsBitmapByteArr = qrCode.GetGraphic(10);
+
+            return qrCodeAsBitmapByteArr;
+        }
+
+        private string GenerateCode()
+        {
+            Random rand = new Random();
+            string chars = "QWERTYUIOPASDFGHJKLZXCVBNM0123456789";
+            int stringlen = rand.Next(20, 30);
+            string code = "";
+
+            for (int i = 0; i < stringlen; i++)
+            {
+                int x = rand.Next(chars.Length);
+
+                code += chars[x];
+            }
+
+            if(unitOfWork.TicketRepo.CheckCodeAsync(code))
+            {
+                GenerateCode();
+            }
+
+            return code;
+        }
+
         public async Task<List<Ticket>> GetAllAsync()
             => await unitOfWork.TicketRepo.GetAllAsync();
 
         public async Task<List<Ticket>> GetByUserId(int userId)
             => await unitOfWork.TicketRepo.GetByUserIdAsync(userId);
+
+        public async Task<Ticket> GetByIdAsync(Guid ticketId)
+            => await unitOfWork.TicketRepo.GetById(ticketId);
     }
 }

@@ -7,6 +7,7 @@ namespace HueFestival_OnlineTicket.Core.InterfaceRepository
     {
         Task<bool> CheckPhoneNumberAsync(string phoneNumber);
         Task<Employee> FindByIdAsync(Guid id);
+        Task<Employee> ChangePasswordAsync(Guid id, string password);
         Task<Employee> FindByPhoneAsync(string phone);
         Task<Employee> LoginAsync(string phone, string password);
     }

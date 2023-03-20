@@ -10,6 +10,7 @@
     {
         public Guid Id { get; set; }
         public string Code { get; set; }
+        public int ShowId { get; set; }
         public string ShowName { get; set; }
         public string Day { get; set; }
         public string Time { get; set; }

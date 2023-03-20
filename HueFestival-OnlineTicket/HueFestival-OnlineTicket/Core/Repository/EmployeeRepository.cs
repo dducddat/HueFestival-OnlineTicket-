@@ -3,6 +3,7 @@ using HueFestival_OnlineTicket.Data;
 using HueFestival_OnlineTicket.Model;
 using HueFestival_OnlineTicket.Service.Repository;
 using Microsoft.EntityFrameworkCore;
+using System.Numerics;
 
 namespace HueFestival_OnlineTicket.Core.Repository
 {
@@ -11,6 +12,9 @@ namespace HueFestival_OnlineTicket.Core.Repository
         public EmployeeRepository(HueFestivalContext _context) : base(_context)
         {
         }
+
+        public async Task<Employee> ChangePasswordAsync(Guid id, string password)
+            => await context.Employee.FirstOrDefaultAsync(x => x.Id == id && x.Password == password);
 
         public async Task<bool> CheckPhoneNumberAsync(string phoneNumber)
             => await context.Employee.Where(x => x.PhoneNumber == phoneNumber).AnyAsync();

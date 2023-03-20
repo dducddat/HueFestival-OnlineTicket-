@@ -66,6 +66,7 @@ namespace HueFestival_OnlineTicket.Helper
 
             CreateMap<Ticket, TicketVM>()
                 .ForMember(des => des.ShowName, act => act.MapFrom(src => src.TicketType.Show.Programme.Name))
+                .ForMember(des => des.ShowId, act => act.MapFrom(src => src.TicketType.ShowId))
                 .ForMember(des => des.Day, act => act.MapFrom(src => src.TicketType.Show.StartDate.ToShortDateString()))
                 .ForMember(des => des.Time, act => act.MapFrom(src => src.TicketType.Show.StartDate.ToShortTimeString()))
                 .ForMember(des => des.Type, act => act.MapFrom(src => src.TicketType.Type))
@@ -78,6 +79,14 @@ namespace HueFestival_OnlineTicket.Helper
             CreateMap<ShowFavorite, ShowFavoriteVM>()
                 .ForMember(des => des.ProgrammeName, act => act.MapFrom(src => src.Show.Programme.Name))
                 .ForMember(des => des.ListProgrammeImage, act => act.MapFrom(src => src.Show.Programme.ListProgrammeImage));
+
+            CreateMap<CheckIn, CheckInVM>()
+                .ForMember(des => des.TicketCode, act => act.MapFrom(src => src.Ticket.Code))
+                .ForMember(des => des.DateCheckIn, act => act.MapFrom(src => src.DateCreated.ToString("dd-MM-yyyy")))
+                .ForMember(des => des.TypeTicket, act => act.MapFrom(src => src.Ticket.TicketType.Type))
+                .ForMember(des => des.EmployeeCheckIn, act => act.MapFrom(src => src.Employee.Name))
+                .ForMember(des => des.Status, act => act.MapFrom(src => src.Status))
+                .ForMember(des => des.PriceTicket, act => act.MapFrom(src => src.Ticket.TicketType.Price));
         }
     }
 }
